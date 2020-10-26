@@ -1,16 +1,25 @@
-package se.experis.academy.noticeboard.Controllers;
+package se.experis.academy.noticeboard.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.experis.academy.noticeboard.Models.CommonResponse;
-import se.experis.academy.noticeboard.Models.Post;
-import se.experis.academy.noticeboard.Repositories.PostRepository;
-import se.experis.academy.noticeboard.Utils.Command;
+import se.experis.academy.noticeboard.models.Comment;
+import se.experis.academy.noticeboard.models.CommonResponse;
+import se.experis.academy.noticeboard.models.Post;
+import se.experis.academy.noticeboard.models.User;
+import se.experis.academy.noticeboard.models.web.PostWeb;
+import se.experis.academy.noticeboard.repositories.PostRepository;
+import se.experis.academy.noticeboard.repositories.UserRepository;
+import se.experis.academy.noticeboard.utils.Command;
 
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -18,15 +27,32 @@ import java.util.Optional;
 public class PostController {
 
     @Autowired
-    private PostRepository repository;
+    private PostRepository postRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/create")
 
-    public ResponseEntity<CommonResponse> addPost(HttpServletRequest request, HttpServletResponse response, @RequestBody Post post) {
+    public ResponseEntity<CommonResponse> addPost(HttpServletRequest request, HttpServletResponse response, @RequestBody PostWeb newPost) {
+
         Command cmd = new Command(request);
         CommonResponse cr = new CommonResponse();
 
-        post = repository.save(post);
+        Post post = new Post();
+        post.setTitle(newPost.getTitle());
+        post.setDescription(newPost.getDescription());
+        Optional<User> userOptional = userRepository.findById(newPost.getUserId());
+
+        if (userOptional.isPresent())
+            post.setUser(userOptional.get());
+        //post.setUser(userRepository.getOne(newPost.getUserId()));
+
+        System.out.println(newPost.getUserId());
+        post.setCreatedAt(LocalDateTime.now());
+
+
+        postRepository.save(post);
+
         cr.data = post;
         cr.message = "New post with id: " + post.getId();
 
@@ -42,8 +68,11 @@ public class PostController {
         Command cmd = new Command(request);
         CommonResponse cr = new CommonResponse();
 
-        cr.data = repository.findAll();
-        if(repository.count()>0)
+        cr.data = postRepository.findAll();
+        List<Post> posts = postRepository.findAll();
+        posts.sort(Comparator.comparing(Post::getCreatedAt).reversed());
+
+        if(postRepository.count()>0)
             cr.message = "All posts";
         else{
             cr.message = "No posts found";
@@ -62,8 +91,8 @@ public class PostController {
 
         HttpStatus resp;
 
-        if (repository.existsById(id)) {
-            cr.data = repository.findById(id);
+        if (postRepository.existsById(id)) {
+            cr.data = postRepository.findById(id);
             cr.message = "Post with id: " + id;
             resp = HttpStatus.OK;
         } else {
@@ -76,14 +105,14 @@ public class PostController {
         return new ResponseEntity<>(cr, resp);
     }
 
-    @PatchMapping("/actor/{id}")
-    public ResponseEntity<CommonResponse> updatePost(HttpServletRequest request, @RequestBody Post newPost, @PathVariable Integer id) {
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<CommonResponse> updatePost(HttpServletRequest request, @RequestBody PostWeb newPost, @PathVariable Integer id) {
         Command cmd = new Command(request);
         CommonResponse cr = new CommonResponse();
         HttpStatus resp;
 
-        if (repository.existsById(id)) {
-            Optional<Post> postRepo = repository.findById(id);
+        if (postRepository.existsById(id)) {
+            Optional<Post> postRepo = postRepository.findById(id);
             Post post = postRepo.get();
 
             if (newPost.getDescription() != null) {
@@ -92,11 +121,8 @@ public class PostController {
             if (newPost.getTitle() != null) {
                 post.setTitle(newPost.getTitle());
             }
-            if (newPost.getCreatedAt() != null) {
-                post.setCreatedAt(newPost.getCreatedAt());
-            }
 
-            repository.save(post);
+            postRepository.save(post);
 
             cr.data = post;
             cr.message = "Updated post with id: " + post.getId();
@@ -110,14 +136,15 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse> deletePost(HttpServletRequest request, @PathVariable Integer id) {
+    public ResponseEntity<CommonResponse> deletePost(HttpServletRequest request, @RequestBody PostWeb newPost, @PathVariable Integer id) {
         Command cmd = new Command(request);
         CommonResponse cr = new CommonResponse();
         HttpStatus resp;
+        // check session
 
-        if(repository.existsById(id)) {
+        if(postRepository.existsById(id) && (postRepository.findById(id).get().getUser().getId()) == newPost.getUserId()) {
 
-            repository.deleteById(id);
+            postRepository.deleteById(id);
             cr.message = "Deleted post with id: " + id;
             resp = HttpStatus.OK;
         } else {

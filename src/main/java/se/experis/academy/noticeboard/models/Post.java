@@ -1,16 +1,15 @@
-package se.experis.academy.noticeboard.Models;
+package se.experis.academy.noticeboard.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class Post {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -29,7 +28,8 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "post",fetch=FetchType.LAZY)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "post",fetch=FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Comment> comments;
 
     public Integer getId() { return id; }

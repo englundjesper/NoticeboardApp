@@ -1,4 +1,4 @@
-package se.experis.academy.noticeboard.Utils;
+package se.experis.academy.noticeboard.utils;
 
 import org.springframework.http.HttpStatus;
 

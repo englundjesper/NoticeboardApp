@@ -1,5 +1,6 @@
-package se.experis.academy.noticeboard.Models;
+package se.experis.academy.noticeboard.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -18,6 +19,7 @@ public class Comment {
     @Column
     private String description;
 
+    @JsonBackReference
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;

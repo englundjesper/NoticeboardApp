@@ -1,13 +1,13 @@
-package se.experis.academy.noticeboard.Controllers;
+package se.experis.academy.noticeboard.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.experis.academy.noticeboard.Models.Comment;
-import se.experis.academy.noticeboard.Models.CommonResponse;
-import se.experis.academy.noticeboard.Repositories.CommentRepository;
-import se.experis.academy.noticeboard.Utils.Command;
+import se.experis.academy.noticeboard.models.Comment;
+import se.experis.academy.noticeboard.models.CommonResponse;
+import se.experis.academy.noticeboard.repositories.CommentRepository;
+import se.experis.academy.noticeboard.utils.Command;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

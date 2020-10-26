@@ -1,4 +1,4 @@
-package se.experis.academy.noticeboard.Models;
+package se.experis.academy.noticeboard.models;
 
 public class CommonResponse {
     public Object data;
