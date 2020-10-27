@@ -7,5 +7,6 @@ import se.experis.academy.noticeboard.models.User;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post,Integer> {
-    List<Post> findAllByUser(User user);
+    List<Post> findAllByUser(Integer userId);
+
 }

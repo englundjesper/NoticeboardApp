@@ -1,5 +1,7 @@
 package se.experis.academy.noticeboard.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +15,11 @@ import se.experis.academy.noticeboard.repositories.PostRepository;
 import se.experis.academy.noticeboard.repositories.UserRepository;
 import se.experis.academy.noticeboard.utils.Command;
 
-import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = "/api/v1/post")
@@ -42,14 +41,17 @@ public class PostController {
         post.setTitle(newPost.getTitle());
         post.setDescription(newPost.getDescription());
         Optional<User> userOptional = userRepository.findById(newPost.getUserId());
-
         if (userOptional.isPresent())
+            
             post.setUser(userOptional.get());
-        //post.setUser(userRepository.getOne(newPost.getUserId()));
+        post.setUser(userRepository.getOne(newPost.getUserId()));
 
         System.out.println(newPost.getUserId());
         post.setCreatedAt(LocalDateTime.now());
 
+        String firstName = userOptional.get().getFirstName();
+        String lastName = userOptional.get().getLastName();
+        int id = newPost.getUserId();
 
         postRepository.save(post);
 
@@ -155,5 +157,4 @@ public class PostController {
         cmd.setResult(resp);
         return new ResponseEntity<>(cr, resp);
     }
-
 }
