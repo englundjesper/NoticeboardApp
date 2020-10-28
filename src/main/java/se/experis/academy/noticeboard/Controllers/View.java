@@ -1,4 +1,4 @@
-package se.experis.academy.noticeboard.controllers;
+package se.experis.academy.noticeboard.Controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

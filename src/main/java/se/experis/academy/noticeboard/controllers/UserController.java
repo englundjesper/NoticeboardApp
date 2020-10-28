@@ -28,6 +28,8 @@ public class UserController {
         Command cmd = new Command(request);
         CommonResponse cr = new CommonResponse();
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         user = repository.save(user);
         cr.data = user;
         cr.message = "New user with id: " + user.getId();
