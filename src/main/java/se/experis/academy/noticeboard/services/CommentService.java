@@ -41,12 +41,12 @@ public class CommentService {
         HttpStatus resp;
         HttpSession session = request.getSession(false);
         if (session != null) {
-            int loggedInUser = (int) session.getAttribute("userId");
+            int loggedInUserId = (int) session.getAttribute("userId");
+            Optional<User> optionalUser = userRepository.findById(loggedInUserId);
 
-            if (loggedInUser == commentWeb.getUserId()) {
-                Optional<User> optionalUser = userRepository.findById(commentWeb.getUserId());
+            if (optionalUser.isPresent()) {
                 Optional<Post> optionalPost = postRepository.findById(commentWeb.getPostId());
-                if (optionalUser.isPresent() && optionalPost.isPresent()) {
+                if (optionalPost.isPresent()) {
                     comment.setPost(optionalPost.get());
                     comment.setUser(optionalUser.get());
                     comment.setDescription(commentWeb.getDescription());
@@ -57,9 +57,9 @@ public class CommentService {
                     response.addHeader("Location", "/comment/" + comment.getId());
                     cr.message = "New comment with id: " + comment.getId();
                 } else {
-                    cr.message = !optionalUser.isPresent() && optionalPost.isPresent() ? "User not found with id: " + commentWeb.getUserId()
+                    cr.message = !optionalUser.isPresent() && optionalPost.isPresent() ? "User not found with id: " + loggedInUserId
                             : optionalUser.isPresent() && !optionalPost.isPresent() ? "Post not found with id: " + commentWeb.getPostId()
-                            : "User and post not found with ids: userId: " + commentWeb.getUserId() + " postId: " + commentWeb.getPostId();
+                            : "User and post not found with ids: userId: " + loggedInUserId + " postId: " + commentWeb.getPostId();
                     resp = HttpStatus.NOT_FOUND;
                 }
 
@@ -84,8 +84,9 @@ public class CommentService {
         HttpSession session = request.getSession(false);
         if (session != null) {
             int loggedInUserId = (int) session.getAttribute("userId");
+            Optional<User> optionalUser = userRepository.findById(loggedInUserId);
 
-            if (loggedInUserId == commentWeb.getUserId()) {
+            if (optionalUser.isPresent()) {
                 if (commentRepository.existsById(id)) {
                     if (commentRepository.findById(id).get().getUser().getId() == loggedInUserId) {
                         Optional<Comment> commentOptional = commentRepository.findById(id);
@@ -127,8 +128,9 @@ public class CommentService {
         HttpSession session = request.getSession(false);
         if (session != null) {
             int loggedInUserId = (int) session.getAttribute("userId");
+            Optional<User> optionalUser = userRepository.findById(loggedInUserId);
 
-            if (loggedInUserId == commentWeb.getUserId()) {
+            if (optionalUser.isPresent()) {
                 if (commentRepository.existsById(id)) {
                     if (commentRepository.findById(id).get().getUser().getId() == loggedInUserId) {
                         commentRepository.deleteById(id);

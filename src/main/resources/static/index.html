@@ -6,7 +6,9 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="/main.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
     <title>Title</title>
 </head>
@@ -25,58 +27,55 @@
 </header>
 
 <div class="main-container">
-    <ul>
-        <a href="/post" class="notice-item">
-            <div  class="notice-item-content">
-                <p style="margin-left: 0;">Car Service</p>
-            </div>
-            <div style="flex: 2;" class="notice-item-content">
-                <p>Perform basic auto care and maintenance tasks such as oil changes, fluid level checks, and tire rotation.</p>
-            </div>
-            <div class="notice-item-content">
-                <p>2020-10-28</p>
-            </div>
-            <div  class="notice-item-content">
-                <p>Aman</p>
-            </div>
-        </a>
+    <ul id="list">
 
-        <a href="/post" class="notice-item">
-            <div  class="notice-item-content">
-                <p style="margin-left: 0;">Car Service</p>
-            </div>
-            <div style="flex: 2;" class="notice-item-content">
-                <p>Perform basic auto care and maintenance tasks such as oil changes, fluid level checks, and tire rotation.</p>
-            </div>
-            <div class="notice-item-content">
-                <p>2020-10-28</p>
-            </div>
-            <div  class="notice-item-content">
-                <p>Aman</p>
-            </div>
-        </a>
-
-        <a href="/post" class="notice-item">
-            <div  class="notice-item-content">
-                <p style="margin-left: 0;">Car Service</p>
-            </div>
-            <div style="flex: 2;" class="notice-item-content">
-                <p>Perform basic autoautoautoautoauto care and maintenance tasks such as oil changes, fluid level checks, and tire rotation.</p>
-            </div>
-            <div class="notice-item-content">
-                <p>2020-10-28</p>
-            </div>
-            <div  class="notice-item-content">
-                <p>Zadran</p>
-            </div>
-        </a>
     </ul>
 </div>
 
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+<script>
+    $(window).on('load', function () {
+
+        $.ajax({
+            url: "/api/v1/post/all",
+            type: 'GET',
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (res) {
+
+                let posts = res.data;
+                console.log(posts)
+
+                for (let i =0; i < posts.length; i++) {
+                    console.log(posts[i]);
+                    $("#list").append(
+                        `
+        <a href=${"/post/"}${posts[i].id} class="notice-item">
+            <div  class="notice-item-content">
+                <p style=${"margin-left: 0;"}>${posts[i].title}</p>
+            </div>
+            <div style="flex: 2;"class="notice-item-content">
+                <p>${posts[i].description}</p>
+            </div>
+            <div class="notice-item-content">
+                <p>${posts[i].createdAt}</p>
+            </div>
+            <div  class="notice-item-content">
+                <p>${posts[i].user.firstName}</p>
+            </div>
+        </a>
+                        `
+                    );
+                }
+
+            }
+        });
+
+    })
+</script>
+
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>

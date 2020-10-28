@@ -1,5 +1,9 @@
 package se.experis.academy.noticeboard.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import javax.persistence.*;
 
 @Entity
@@ -20,6 +24,7 @@ public class User {
     private String userName;
 
     @Column
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
 

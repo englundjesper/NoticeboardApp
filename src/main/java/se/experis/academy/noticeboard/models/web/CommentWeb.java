@@ -1,16 +1,12 @@
 package se.experis.academy.noticeboard.models.web;
 
 public class CommentWeb {
-    private Integer userId;
     private Integer postId;
     private String description;
 
     public CommentWeb() {
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
 
     public Integer getPostId() {
         return postId;
@@ -20,9 +16,6 @@ public class CommentWeb {
         return description;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 
     public void setPostId(Integer postId) {
         this.postId = postId;

@@ -6,8 +6,9 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="main.css">
-
+    <link rel="stylesheet" href="/main.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
     <title>Title</title>
 </head>
@@ -19,7 +20,7 @@
         <a href="/">
             <h1>Notices</h1>
 
-        </a>    </div>
+        </a></div>
 
     <a href="/addpost" class="add-post">Add Post</a>
 
@@ -43,47 +44,12 @@
         </div>
 
         <hr>
-        <div class="post-replies">
-            <h3>4 Replies</h3>
-
-            <div class="post-replies-sign-in">
-                <div>
-                    <h4>You must be signed in to reply.</h4>
-                    <a class="post-replies-login-btn" href="/login">Login</a>
-                </div>
-            </div>
-
-            <p>Antigen ovan eller nedan visas, ej bägge samtidigt</p>
-
-            <div class="post-add-reply">
-                <textarea rows="3" placeholder="Write a reply...">
-                </textarea>
-
-                <button class="post-replies-login-btn" href="/post">Post</button>
-
-
-            </div>
+        <div id="replies" class="post-replies">
+            <h3 id="amount-replies">4 Replies</h3>
 
             <div class="post-replies-list">
-                <div class="post-replies-reply">
 
-                </div>
 
-                <div class="post-replies-reply">
-                    <h3 style="color: #0b6e4f">Username</h3>
-
-                    <p>Example reply:</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce volutpat consequat est nec tincidunt. Cras facilisis, ipsum sit amet malesuada dictum, nulla nisl ultrices lacus, vitae blandit tortor diam nec metus. Curabitur a enim eget lacus aliquam rhoncus. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p>
-
-                </div>
-
-                <div class="post-replies-reply">
-                    <h3 style="color: #0b6e4f">Username2</h3>
-
-                    <p>Example reply:</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce volutpat consequat est nec tincidunt. Cras facilisis, ipsum sit amet malesuada dictum, nulla nisl ultrices lacus, vitae blandit tortor diam nec metus. Curabitur a enim eget lacus aliquam rhoncus. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p>
-
-                </div>
 
             </div>
 
@@ -93,9 +59,110 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+<script>
+
+    $(window).on('load', function () {
+
+        $.ajax({
+            url: "/api/v1/auth/status",
+            type: 'GET',
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (res) {
+
+                let loginDiv = `<div id="sign-in-div" class="post-replies-sign-in">
+                                   <div>
+                                   <h4>You must be signed in to reply.</h4>
+                                   <a class="post-replies-login-btn" href=${"/login"}>Login</a>
+                                   </div>
+                                   `;
+
+                let commentDiv = `<div id="textarea-div" class="post-add-reply">
+                        <textarea id="reply-content" rows="3" placeholder="Write a reply...">
+
+                        </textarea>
+
+                        <button id="target" class="post-replies-login-btn" href=${"/post"}>Post</button>
+                        </div>
+                                    `
+
+
+                if (res == true) {
+
+
+                    $( "#amount-replies" ).after( commentDiv );
+
+                    $("#target").click(function () {
+
+                        let location = window.location.href;
+                        let postID = location.split("post/")[1];
+
+                        $.ajax({
+                            url: "/api/v1/comment/create",
+                            type: 'POST',
+                            contentType: "application/json",
+                            dataType: 'json',
+                            data: JSON.stringify(
+                                {
+                                    "postId":postID,
+                                    "description": $("#reply-content").val()
+                                }
+                            ),
+                            success: function (res) {
+                                console.log(res);
+
+                            }
+                        });
+
+
+                    });
+
+                } else {
+                    $( "#amount-replies" ).after( loginDiv );
+
+                }
+            }
+        });
+
+
+        let location = window.location.href;
+        let postID = location.split("post/")[1];
+
+        $.ajax({
+            url: "/api/v1/post/"+postID,
+            type: 'GET',
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (res) {
+
+                console.log(res.data)
+                let comments = res.data.comments;
+
+                $('#amount-replies').text(comments.length + " Replies");
+
+                for (let i =0; i < comments.length; i++) {
+                    $("#replies").append(
+                        `<div class="post-replies-reply">
+                    <h3 style="color: #0b6e4f">${comments[i].user.firstName}</h3>
+
+                    <p>${comments[i].description}</p>
+
+                </div>
+
+                        `
+                    );
+                }
+
+            }
+        });
+
+
+
+    })
+
+</script>
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
