@@ -1,86 +1,34 @@
 package se.experis.academy.noticeboard.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.experis.academy.noticeboard.models.Comment;
 import se.experis.academy.noticeboard.models.CommonResponse;
-import se.experis.academy.noticeboard.repositories.CommentRepository;
-import se.experis.academy.noticeboard.utils.Command;
-
+import se.experis.academy.noticeboard.models.web.CommentWeb;
+import se.experis.academy.noticeboard.services.CommentService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/v1/comment")
 public class CommentController {
 
     @Autowired
-    private CommentRepository repository;
+    private CommentService commentService;
 
-    @PostMapping("/")
-    public ResponseEntity<CommonResponse> addComment(HttpServletRequest request, HttpServletResponse response, @RequestBody Comment comment) {
-        Command cmd = new Command(request);
-        CommonResponse cr = new CommonResponse();
-
-        comment = repository.save(comment);
-        cr.data = comment;
-        cr.message = "New comment with id: " + comment.getId();
-
-        HttpStatus resp = HttpStatus.CREATED;
-        response.addHeader("Location", "/comment/" + comment.getId());
-
-        cmd.setResult(resp);
-        return new ResponseEntity<>(cr, resp);
+    @PostMapping("/create")
+    public ResponseEntity<CommonResponse> addComment(HttpServletRequest request, HttpServletResponse response, @RequestBody CommentWeb commentWeb) {
+       return commentService.addComment(request,response,commentWeb);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<CommonResponse> updateComment(HttpServletRequest request, @RequestBody Comment newComment, @PathVariable Integer id) {
-        Command cmd = new Command(request);
-        CommonResponse cr = new CommonResponse();
-        HttpStatus resp;
-
-        if (repository.existsById(id)) {
-            Optional<Comment> actorRepo = repository.findById(id);
-            Comment comment = actorRepo.get();
-
-            if (newComment.getDescription() != null) {
-                comment.setDescription(newComment.getDescription());
-            }
-
-            repository.save(comment);
-
-            cr.data = comment;
-            cr.message = "Updated comment with id: " + comment.getId();
-            resp = HttpStatus.OK;
-        } else {
-            cr.message = "Comment not found with id: " + id;
-            resp = HttpStatus.NOT_FOUND;
-        }
-        cmd.setResult(resp);
-        return new ResponseEntity<>(cr, resp);
+    public ResponseEntity<CommonResponse> updateComment(HttpServletRequest request, @RequestBody CommentWeb commentWeb, @PathVariable Integer id) {
+        return commentService.updateComment(request, commentWeb, id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse> deleteComment(HttpServletRequest request, @PathVariable Integer id) {
-        Command cmd = new Command(request);
-        CommonResponse cr = new CommonResponse();
-        HttpStatus resp;
-
-        if(repository.existsById(id)) {
-
-            repository.deleteById(id);
-            cr.message = "Deleted comment with id: " + id;
-            resp = HttpStatus.OK;
-        } else {
-            cr.message = "Comment not found with id: " + id;
-            resp = HttpStatus.NOT_FOUND;
-        }
-
-        cmd.setResult(resp);
-        return new ResponseEntity<>(cr, resp);
+    public ResponseEntity<CommonResponse> deleteComment(HttpServletRequest request,@RequestBody CommentWeb commentWeb, @PathVariable Integer id) {
+    return  commentService.deleteComment(request, commentWeb, id);
     }
 
 }

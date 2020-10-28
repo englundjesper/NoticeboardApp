@@ -1,16 +1,10 @@
 package se.experis.academy.noticeboard.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
-
 public class Comment {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -28,12 +22,22 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private LocalDateTime createdAt;
+
     public Integer getId() { return id; }
     public String getDescription() { return description; }
     public Post getPost() { return post; }
     public User getUser() { return user; }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
     public void setDescription(String description) { this.description = description; }
     public void setPost(Post post) { this.post = post; }
     public void setUser(User user) { this.user = user; }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }
