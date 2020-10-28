@@ -3,6 +3,7 @@ package se.experis.academy.noticeboard.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import se.experis.academy.noticeboard.models.CommonResponse;
 import se.experis.academy.noticeboard.models.User;
@@ -18,6 +19,9 @@ public class UserController {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
     @PostMapping("/create")
 
     public ResponseEntity<CommonResponse> createUser(HttpServletRequest request, HttpServletResponse response, @RequestBody User user) {
