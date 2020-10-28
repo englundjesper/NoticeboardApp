@@ -9,8 +9,10 @@ import se.experis.academy.noticeboard.models.CommonResponse;
 import se.experis.academy.noticeboard.models.User;
 import se.experis.academy.noticeboard.repositories.UserRepository;
 import se.experis.academy.noticeboard.utils.Command;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/v1/user")
@@ -21,21 +23,29 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+
     @PostMapping("/create")
 
     public ResponseEntity<CommonResponse> createUser(HttpServletRequest request, HttpServletResponse response, @RequestBody User user) {
         Command cmd = new Command(request);
         CommonResponse cr = new CommonResponse();
+        HttpStatus resp;
+        Optional<User> optionalUser = repository.findByUserName(user.getUserName());
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (!optionalUser.isPresent()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        user = repository.save(user);
-        cr.data = user;
-        cr.message = "New user with id: " + user.getId();
+            user = repository.save(user);
+            cr.data = user;
+            cr.message = "New user with id: " + user.getId();
 
-        HttpStatus resp = HttpStatus.CREATED;
-        response.addHeader("Location", "/user/" + user.getId());
+            resp = HttpStatus.CREATED;
+            response.addHeader("Location", "/user/" + user.getId());
+        } else {
+            resp = HttpStatus.CONFLICT;
+            cr.message = user.getUserName() + " already exists";
+        }
+
 
         cmd.setResult(resp);
         return new ResponseEntity<>(cr, resp);

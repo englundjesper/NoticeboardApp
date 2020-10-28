@@ -38,17 +38,16 @@ public class PostService {
         HttpSession session = request.getSession(false);
         if (session != null) {
             int loggedInUserId = (int) session.getAttribute("userId");
-            if (loggedInUserId == postWeb.getUserId()) {
+
+            Optional<User> optionalUser = userRepository.findById(loggedInUserId);
+
+            if (optionalUser.isPresent()) {
                 System.out.println("Id create " + loggedInUserId);
                 post.setTitle(postWeb.getTitle());
                 post.setDescription(postWeb.getDescription());
-                Optional<User> userOptional = userRepository.findById(postWeb.getUserId());
-                if (userOptional.isPresent()) {
-                    post.setUser(userOptional.get());
-                }
-                post.setUser(userRepository.getOne(postWeb.getUserId()));
-                System.out.println(postWeb.getUserId());
+                post.setUser(optionalUser.get());
                 post.setCreatedAt(LocalDateTime.now().withNano(0));
+
                 postRepository.save(post);
                 cr.message = "New post with id: " + post.getId();
                 resp = HttpStatus.CREATED;
@@ -114,9 +113,11 @@ public class PostService {
         HttpSession session = request.getSession(false);
         if (session != null) {
             int loggedInUserId = (int) session.getAttribute("userId");
-            if (loggedInUserId == postWeb.getUserId()) {
+            Optional<User> optionalUser = userRepository.findById(loggedInUserId);
+
+            if (optionalUser.isPresent()) {
                 if (postRepository.existsById(id)) {
-                    if((postRepository.findById(id).get().getUser().getId()) == loggedInUserId){
+                    if ((postRepository.findById(id).get().getUser().getId()) == loggedInUserId) {
                         Optional<Post> postRepo = postRepository.findById(id);
                         Post post = postRepo.get();
 
@@ -130,7 +131,7 @@ public class PostService {
                         cr.data = post;
                         cr.message = "Updated post with id: " + post.getId();
                         resp = HttpStatus.OK;
-                    }else{
+                    } else {
                         cr.message = "You can only update your own posts";
                         resp = HttpStatus.METHOD_NOT_ALLOWED;
                     }
@@ -161,13 +162,15 @@ public class PostService {
 
         if (session != null) {
             int loggedInUserId = (int) session.getAttribute("userId");
-            if (loggedInUserId == postWeb.getUserId()) {
+            Optional<User> optionalUser = userRepository.findById(loggedInUserId);
+
+            if (optionalUser.isPresent()) {
                 if (postRepository.existsById(id)) {
-                    if((postRepository.findById(id).get().getUser().getId()) == loggedInUserId){
+                    if ((postRepository.findById(id).get().getUser().getId()) == loggedInUserId) {
                         postRepository.deleteById(id);
                         cr.message = "Deleted post with id: " + id;
                         resp = HttpStatus.OK;
-                    }else{
+                    } else {
                         cr.message = "You can only delete your own posts";
                         resp = HttpStatus.METHOD_NOT_ALLOWED;
                     }

@@ -7,7 +7,23 @@
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/main.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
+    <script>
+        $.ajax({
+            url: "/api/v1/auth/status",
+            type: 'GET',
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (res) {
+
+                if (res == true) {
+                    $(location).attr('href', '/')
+                }
+            }
+        });
+    </script>
     <title>Title</title>
 </head>
 <body style="background: #f1f5f8;">
@@ -18,7 +34,7 @@
         <a href="/">
             <h1>Notices</h1>
 
-        </a>    </div>
+        </a></div>
 
     <a href="/addpost" class="add-post">Add Post</a>
 
@@ -31,10 +47,11 @@
         <div class="login-register-container">
             <div class="login-register-card">
                 <div class="login-register-title">
-                        <h2>Sign in</h2>
-                    <p>New user?  <span> <a style="color: #148cb8; font-size: 0.9rem;" href="/register">Create an account </a> </span></p>
+                    <h2>Sign in</h2>
+                    <p>New user? <span> <a style="color: #148cb8; font-size: 0.9rem;"
+                                           href="/register">Create an account </a> </span></p>
                 </div>
-                <form>
+                <form id="target">
                     <div class="form-group">
                         <input type="text" name="email" id="username" class="input-field" placeholder="Username">
                     </div>
@@ -44,7 +61,7 @@
                     </div>
 
                     <div class="form-group">
-                        <input  type="button" name="submit" class="add-post login-btn" value="Login">
+                        <input type="submit" name="submit" class="add-post login-btn" value="Login">
                     </div>
 
                 </form>
@@ -54,9 +71,40 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+<script>
+
+    $(window).on('load', function () {
+
+
+        $("#target").submit(function (e) {
+
+            //prevent Default functionality
+            e.preventDefault();
+
+            //get the action-url of the form
+
+            //do your own request an handle the results
+            $.ajax({
+                url: "/api/v1/auth/login",
+                type: 'POST',
+                contentType: "application/json",
+                dataType: 'json',
+                data: JSON.stringify(
+                    {"userName": $("#username").val(), "password": $("#password").val()}
+                ),
+                success: function (res) {
+                    console.log(res);
+
+                }
+            });
+
+        });
+    });
+
+
+</script>
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
