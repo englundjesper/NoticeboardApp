@@ -1,6 +1,7 @@
 package se.experis.academy.noticeboard.utils;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -15,10 +16,13 @@ import java.net.URISyntaxException;
 @PropertySource("application.properties")
 public class RedisConfig {
 
+    @Value("${redis.host}")
+    private String redisHost;
     @Bean
     public JedisPool getJedisPool() {
         try {
-            URI redisURI = new URI("redis://h:p05678bbf8d604efc616a656fbab1df89041e9b59eaccb501bccaf19993b37052@ec2-34-239-50-117.compute-1.amazonaws.com:14079");
+//            URI redisURI = new URI("redis://h:p05678bbf8d604efc616a656fbab1df89041e9b59eaccb501bccaf19993b37052@ec2-34-239-50-117.compute-1.amazonaws.com:14079");
+            URI redisURI = new URI(redisHost);
             return new JedisPool(new JedisPoolConfig(),
                     redisURI.getHost(),
                     redisURI.getPort(),
