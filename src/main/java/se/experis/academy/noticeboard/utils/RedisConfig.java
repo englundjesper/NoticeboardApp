@@ -23,7 +23,7 @@ public class RedisConfig {
     }
 
     public static JedisPool getPool() throws URISyntaxException {
-        URI redisURI = new URI(System.getenv("redis://h:p05678bbf8d604efc616a656fbab1df89041e9b59eaccb501bccaf19993b37052@ec2-34-239-50-117.compute-1.amazonaws.com:14079"));
+        URI redisURI = new URI("redis://h:p05678bbf8d604efc616a656fbab1df89041e9b59eaccb501bccaf19993b37052@ec2-34-239-50-117.compute-1.amazonaws.com:14079");
         JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setMaxTotal(10);
         poolConfig.setMaxIdle(5);
@@ -37,7 +37,7 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory jedisConnectionFactory(){
         JedisPoolConfig poolConfig = new JedisPoolConfig();
-        var uri = RedisURI.create(System.getenv("redis://h:p05678bbf8d604efc616a656fbab1df89041e9b59eaccb501bccaf19993b37052@ec2-34-239-50-117.compute-1.amazonaws.com:14079"));
+        var uri = RedisURI.create("redis://h:p05678bbf8d604efc616a656fbab1df89041e9b59eaccb501bccaf19993b37052@ec2-34-239-50-117.compute-1.amazonaws.com:14079");
         new RedisStandaloneConfiguration(uri.getHost(), uri.getPort());
         poolConfig.setMaxTotal(10);
         poolConfig.setMaxIdle(5);
