@@ -25,18 +25,16 @@ public class Comment {
     private LocalDateTime createdAt;
 
     public Integer getId() { return id; }
-    public String getDescription() { return description; }
     public Post getPost() { return post; }
     public User getUser() { return user; }
-
+    public String getDescription() { return description; }
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setDescription(String description) { this.description = description; }
     public void setPost(Post post) { this.post = post; }
     public void setUser(User user) { this.user = user; }
-
+    public void setDescription(String description) { this.description = description; }
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }

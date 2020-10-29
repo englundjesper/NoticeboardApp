@@ -30,5 +30,4 @@ public class CommentController {
     public ResponseEntity<CommonResponse> deleteComment(HttpServletRequest request,@RequestBody CommentWeb commentWeb, @PathVariable Integer id) {
     return  commentService.deleteComment(request, commentWeb, id);
     }
-
 }

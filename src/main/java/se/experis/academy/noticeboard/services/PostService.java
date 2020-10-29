@@ -11,7 +11,6 @@ import se.experis.academy.noticeboard.models.web.PostWeb;
 import se.experis.academy.noticeboard.repositories.PostRepository;
 import se.experis.academy.noticeboard.repositories.UserRepository;
 import se.experis.academy.noticeboard.utils.Command;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -38,7 +37,6 @@ public class PostService {
         HttpSession session = request.getSession(false);
         if (session != null) {
             int loggedInUserId = (int) session.getAttribute("userId");
-
             Optional<User> optionalUser = userRepository.findById(loggedInUserId);
 
             if (optionalUser.isPresent()) {
@@ -47,7 +45,6 @@ public class PostService {
                 post.setDescription(postWeb.getDescription());
                 post.setUser(optionalUser.get());
                 post.setCreatedAt(LocalDateTime.now().withNano(0));
-
                 postRepository.save(post);
                 cr.message = "New post with id: " + post.getId();
                 resp = HttpStatus.CREATED;
@@ -58,7 +55,6 @@ public class PostService {
         } else {
             cr.message = "Not logged in";
         }
-
         cr.data = post;
         cmd.setResult(resp);
         return new ResponseEntity<>(cr, resp);
@@ -67,8 +63,8 @@ public class PostService {
     public ResponseEntity<CommonResponse> getPostById(HttpServletRequest request, Integer id) {
         Command cmd = new Command(request);
         CommonResponse cr = new CommonResponse();
-
         HttpStatus resp;
+
         Optional<Post> optionalPost = postRepository.findById(id);
         if (optionalPost.isPresent()) {
             Post post = optionalPost.get();
@@ -87,7 +83,6 @@ public class PostService {
     public ResponseEntity<CommonResponse> getAllPosts(HttpServletRequest request) {
         Command cmd = new Command(request);
         CommonResponse cr = new CommonResponse();
-
         List<Post> posts = postRepository.findAll()
                 .stream()
                 .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
@@ -99,9 +94,7 @@ public class PostService {
         else {
             cr.message = "No posts found";
         }
-
         HttpStatus resp = HttpStatus.OK;
-
         cmd.setResult(resp);
         return new ResponseEntity<>(cr, resp);
     }
@@ -148,17 +141,15 @@ public class PostService {
             cr.message = "Need to be logged in to update post";
             resp = HttpStatus.METHOD_NOT_ALLOWED;
         }
-
         cmd.setResult(resp);
         return new ResponseEntity<>(cr, resp);
     }
 
     public ResponseEntity<CommonResponse> deletePost(HttpServletRequest request, Integer id) {
+        HttpSession session = request.getSession(false);
         Command cmd = new Command(request);
         CommonResponse cr = new CommonResponse();
         HttpStatus resp;
-
-        HttpSession session = request.getSession(false);
 
         if (session != null) {
             int loggedInUserId = (int) session.getAttribute("userId");
@@ -191,11 +182,10 @@ public class PostService {
     }
 
     public ResponseEntity<CommonResponse> getUser(HttpServletRequest request, Integer postId) {
+        HttpSession session = request.getSession(false);
         Command cmd = new Command(request);
         CommonResponse cr = new CommonResponse();
         HttpStatus resp;
-
-        HttpSession session = request.getSession(false);
 
         if (session != null) {
             int loggedInUserId = (int) session.getAttribute("userId");
@@ -204,7 +194,6 @@ public class PostService {
             if (optionalUser.isPresent()) {
                 if (postRepository.existsById(postId)) {
                     if ((postRepository.findById(postId).get().getUser().getId()) == loggedInUserId) {
-
                         cr.data = optionalUser.get();
                         cr.message = "User with id: " + loggedInUserId +" is owner of post with id: " + postId;
                         resp = HttpStatus.OK;

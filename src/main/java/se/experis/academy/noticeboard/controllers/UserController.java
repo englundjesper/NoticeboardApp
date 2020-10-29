@@ -9,7 +9,6 @@ import se.experis.academy.noticeboard.models.CommonResponse;
 import se.experis.academy.noticeboard.models.User;
 import se.experis.academy.noticeboard.repositories.UserRepository;
 import se.experis.academy.noticeboard.utils.Command;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
@@ -34,19 +33,15 @@ public class UserController {
 
         if (!optionalUser.isPresent()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-
             user = repository.save(user);
+            resp = HttpStatus.CREATED;
             cr.data = user;
             cr.message = "New user with id: " + user.getId();
-
-            resp = HttpStatus.CREATED;
             response.addHeader("Location", "/user/" + user.getId());
         } else {
             resp = HttpStatus.CONFLICT;
             cr.message = user.getUserName() + " already exists";
         }
-
-
         cmd.setResult(resp);
         return new ResponseEntity<>(cr, resp);
     }

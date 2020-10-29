@@ -10,10 +10,7 @@ import java.net.URISyntaxException;
 
 @SpringBootApplication
 public class NoticeboardAppApplication {
-
     public static void main(String[] args) throws URISyntaxException {
         SpringApplication.run(NoticeboardAppApplication.class, args);
-
     }
-
 }

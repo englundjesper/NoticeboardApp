@@ -6,16 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import se.experis.academy.noticeboard.models.Comment;
-import se.experis.academy.noticeboard.models.CommonResponse;
-import se.experis.academy.noticeboard.models.Post;
-import se.experis.academy.noticeboard.models.User;
+import se.experis.academy.noticeboard.models.*;
+import se.experis.academy.noticeboard.repositories.*;
 import se.experis.academy.noticeboard.models.web.CommentWeb;
-import se.experis.academy.noticeboard.repositories.CommentRepository;
-import se.experis.academy.noticeboard.repositories.PostRepository;
-import se.experis.academy.noticeboard.repositories.UserRepository;
 import se.experis.academy.noticeboard.utils.Command;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -32,7 +26,6 @@ public class CommentService {
 
     @Autowired
     private PostRepository postRepository;
-
 
     public ResponseEntity<CommonResponse> addComment(HttpServletRequest request, HttpServletResponse response, @RequestBody CommentWeb commentWeb) {
         Command cmd = new Command(request);
@@ -62,17 +55,14 @@ public class CommentService {
                             : "User and post not found with ids: userId: " + loggedInUserId + " postId: " + commentWeb.getPostId();
                     resp = HttpStatus.NOT_FOUND;
                 }
-
             } else {
                 cr.message = "Need to be logged in to create comment";
                 resp = HttpStatus.METHOD_NOT_ALLOWED;
-
             }
         } else {
             cr.message = "Need to be logged in to create comment";
             resp = HttpStatus.METHOD_NOT_ALLOWED;
         }
-
         cmd.setResult(resp);
         return new ResponseEntity<>(cr, resp);
     }
@@ -101,7 +91,6 @@ public class CommentService {
                             comment.setDescription(commentWeb.getDescription());
                         }
                         commentRepository.save(comment);
-
                         cr.data = comment;
                         cr.message = "Updated comment with id: " + comment.getId();
                         resp = HttpStatus.OK;
@@ -109,7 +98,6 @@ public class CommentService {
                         cr.message = "You can only update your own comments";
                         resp = HttpStatus.METHOD_NOT_ALLOWED;
                     }
-
                 } else {
                     cr.message = "Comment not found with id: " + id;
                     resp = HttpStatus.NOT_FOUND;
