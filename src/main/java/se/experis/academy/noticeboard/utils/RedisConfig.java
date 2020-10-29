@@ -38,7 +38,7 @@ public class RedisConfig {
     public RedisConnectionFactory jedisConnectionFactory(){
         JedisPoolConfig poolConfig = new JedisPoolConfig();
         var uri = RedisURI.create(System.getenv("REDIS_URL"));
-        var config = new RedisStandaloneConfiguration(uri.getHost(),uri.getPort());
+        new RedisStandaloneConfiguration(uri.getHost(), uri.getPort());
         poolConfig.setMaxTotal(10);
         poolConfig.setMaxIdle(5);
         poolConfig.setMinIdle(1);
@@ -46,7 +46,7 @@ public class RedisConfig {
         poolConfig.setTestOnReturn(true);
         poolConfig.setTestWhileIdle(true);
 
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(config);
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(poolConfig);
         return jedisConnectionFactory;
     }
 }
