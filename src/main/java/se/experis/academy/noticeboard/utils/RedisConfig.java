@@ -1,8 +1,10 @@
 package se.experis.academy.noticeboard.utils;
 
+import io.lettuce.core.RedisURI;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -35,14 +37,16 @@ public class RedisConfig {
     @Bean
     public JedisConnectionFactory jedisConnectionFactory(){
         JedisPoolConfig poolConfig = new JedisPoolConfig();
-
+        var uri = RedisURI.create(System.getenv("REDIS_URL"));
+        var config = new RedisStandaloneConfiguration(uri.getHost(),uri.getPort());
         poolConfig.setMaxTotal(10);
         poolConfig.setMaxIdle(5);
         poolConfig.setMinIdle(1);
         poolConfig.setTestOnBorrow(true);
         poolConfig.setTestOnReturn(true);
         poolConfig.setTestWhileIdle(true);
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(poolConfig);
+
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(config);
         return jedisConnectionFactory;
     }
 }
