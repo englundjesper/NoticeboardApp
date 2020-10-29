@@ -33,10 +33,8 @@ a:hover, a:active{
 
 .add-post {
     align-self: flex-end;
-    margin-top: 20px;
-    margin-right: 20px;
-    margin-bottom: 10px;
 
+    margin-right: 10px;
     background-color: #f03e3e;
     color: white;
     text-decoration: none;
@@ -52,10 +50,28 @@ a:hover, a:active{
     background-color: #f03e3e9c;
 }
 
-.main-header > div {
+.main-header > div:first-child {
     max-width: 950px;
     margin: 0 auto;
     width: 600px;
+}
+
+.nav-list-container{
+    height: auto;
+    width: auto;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    margin-right: 20px;
+
+}
+
+.nav-list-container > p{
+    margin: 0;
+    margin-right: 10px;
 }
 
 .main-header h1 {
@@ -127,7 +143,16 @@ ul {
     border-radius: 5px;
     padding: 1.5rem;
     border-bottom: #dbdbdb;
+
+    min-width: 600px;
+    max-width: 800px;
+
+    display: flex;
+    flex-flow: column nowrap;
+    height: auto;
 }
+
+
 
 hr {
     background: #dbdbdb;
@@ -179,6 +204,18 @@ hr {
     width: 100%;
 }
 
+.edit-delete-icons{
+    margin-left: auto;
+}
+
+.edit-delete-icons > *{
+    cursor: pointer;
+}
+
+.edit-delete-icons:first-child{
+    margin-right: 5px;
+}
+
 .post-replies-login-btn {
     padding: 0 1em;
     text-decoration: none;
@@ -206,6 +243,10 @@ hr {
     display: flex;
     flex-direction: column;
 
+}
+
+textarea{
+    min-height: 300px;
 }
 
 .post-add-reply > textarea {
@@ -247,6 +288,30 @@ hr {
 
     max-width: 700px;
     padding: 10px;
+}
+
+.post-replies-reply p {
+    padding: 6px;
+}
+
+.comment-edit{
+    border: 1px solid #3d7e9a;
+    border-width: 1px 1px 1px 5px; padding: 6px;
+    flex: 1 1 90%;
+}
+
+.save-comment{
+
+    flex: 0 0 5%;
+    margin-left: 5px;
+    align-self: flex-start;
+    cursor: pointer;
+}
+
+.comment-edit-container{
+    display: flex;
+    width: 100%;
+    flex-flow: row wrap;
 }
 
 label {

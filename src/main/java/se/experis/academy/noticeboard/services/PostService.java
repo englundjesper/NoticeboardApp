@@ -153,7 +153,7 @@ public class PostService {
         return new ResponseEntity<>(cr, resp);
     }
 
-    public ResponseEntity<CommonResponse> deletePost(HttpServletRequest request, PostWeb postWeb, Integer id) {
+    public ResponseEntity<CommonResponse> deletePost(HttpServletRequest request, Integer id) {
         Command cmd = new Command(request);
         CommonResponse cr = new CommonResponse();
         HttpStatus resp;
@@ -184,6 +184,44 @@ public class PostService {
             }
         } else {
             cr.message = "Need to be logged in to delete post";
+            resp = HttpStatus.METHOD_NOT_ALLOWED;
+        }
+        cmd.setResult(resp);
+        return new ResponseEntity<>(cr, resp);
+    }
+
+    public ResponseEntity<CommonResponse> getUser(HttpServletRequest request, Integer postId) {
+        Command cmd = new Command(request);
+        CommonResponse cr = new CommonResponse();
+        HttpStatus resp;
+
+        HttpSession session = request.getSession(false);
+
+        if (session != null) {
+            int loggedInUserId = (int) session.getAttribute("userId");
+            Optional<User> optionalUser = userRepository.findById(loggedInUserId);
+
+            if (optionalUser.isPresent()) {
+                if (postRepository.existsById(postId)) {
+                    if ((postRepository.findById(postId).get().getUser().getId()) == loggedInUserId) {
+
+                        cr.data = optionalUser.get();
+                        cr.message = "User with id: " + loggedInUserId +" is owner of post with id: " + postId;
+                        resp = HttpStatus.OK;
+                    } else {
+                        cr.message = "User with id " + loggedInUserId + " not owner of post with id " + postId;
+                        resp = HttpStatus.METHOD_NOT_ALLOWED;
+                    }
+                } else {
+                    cr.message = "Post not found with id: " + postId;
+                    resp = HttpStatus.NOT_FOUND;
+                }
+            } else {
+                cr.message = "User not logged in";
+                resp = HttpStatus.METHOD_NOT_ALLOWED;
+            }
+        } else {
+            cr.message = "User not logged in";
             resp = HttpStatus.METHOD_NOT_ALLOWED;
         }
         cmd.setResult(resp);

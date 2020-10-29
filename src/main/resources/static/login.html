@@ -21,7 +21,8 @@
                 if (res == true) {
                     $(location).attr('href', '/')
                 }
-            }
+            },
+            error: {}
         });
     </script>
     <title>Title</title>
@@ -36,7 +37,9 @@
 
         </a></div>
 
-    <a href="/addpost" class="add-post">Add Post</a>
+    <div class="nav-list-container">
+        <a style="background-color: #148cb8;" href="/login" class="add-post">Login</a>
+        <a style="background-color: #148cb8;" href="/register" class="add-post">Register</a></div>
 
 </header>
 
@@ -93,12 +96,34 @@
                     {"userName": $("#username").val(), "password": $("#password").val()}
                 ),
                 success: function (res) {
-                    console.log(res);
+                    $(".main-container").prepend(`<div class="alert alert-success" role="alert">
+  Logged In!
+</div>`);
+                    removeAlert().then(() => {
+                        window.location.href = "/";
+                    })
 
+                },
+                error: function (){
+                    $(".main-container").prepend(`<div class="alert alert-danger" role="alert">
+  Could not log in!
+</div>`);
                 }
             });
 
         });
+
+        function removeAlert() {
+            return new Promise(function (resolve) {
+
+                setTimeout(function () {
+                    $('.alert').remove();
+                    resolve();
+                }, 2000);
+
+            });
+
+        }
     });
 
 

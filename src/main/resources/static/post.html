@@ -10,6 +10,36 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
+    <script>
+        $.ajax({
+            url: "/api/v1/auth/user",
+            type: 'GET',
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (res) {
+
+                console.log(res)
+                if(res.data){
+                    $(".main-header").append(`
+<div class="nav-list-container">
+                    <p>${res.data.userName}</p>
+                    <a href="/addpost" class="add-post">Add Post</a></div>
+                    `)
+
+                } else{
+                    $(".main-header").append(`
+<div class="nav-list-container">
+                    <a style="background-color: #148cb8;" href="/login" class="add-post">Login</a>
+                    <a style="background-color: #148cb8;" href="/register" class="add-post">Register</a></div>
+                    `)
+
+
+                }
+
+
+            }
+        });
+    </script>
     <title>Title</title>
 </head>
 <body>
@@ -22,30 +52,18 @@
 
         </a></div>
 
-    <a href="/addpost" class="add-post">Add Post</a>
 
 </header>
 
 
 <div class="main-container">
-    <div class="post-container">
-        <div class="post-card">
-            <div class="post-card-header">
-                <h2>Notice title...</h2>
-                <p>by: Author_name | Replies: 5</p>
-            </div>
+    <div id="post-contain" class="post-container">
 
-            <div class="post-card-body">
-                <p>Example body: </p>
-                <p>We are looking for someone that can do cooking for approximately half a day in order to prepare cook
-                    and store family meals for the week. Ability to speak English or Spanish is a bonus. Please reply
-                    with details of background and experience to s.stockholm@yandex.com</p>
-            </div>
         </div>
 
         <hr>
         <div id="replies" class="post-replies">
-            <h3 id="amount-replies">4 Replies</h3>
+            <h3 id="amount-replies"></h3>
 
             <div class="post-replies-list">
 
@@ -59,106 +77,9 @@
     </div>
 </div>
 
-<script>
-
-    $(window).on('load', function () {
-
-        $.ajax({
-            url: "/api/v1/auth/status",
-            type: 'GET',
-            contentType: "application/json",
-            dataType: 'json',
-            success: function (res) {
-
-                let loginDiv = `<div id="sign-in-div" class="post-replies-sign-in">
-                                   <div>
-                                   <h4>You must be signed in to reply.</h4>
-                                   <a class="post-replies-login-btn" href=${"/login"}>Login</a>
-                                   </div>
-                                   `;
-
-                let commentDiv = `<div id="textarea-div" class="post-add-reply">
-                        <textarea id="reply-content" rows="3" placeholder="Write a reply...">
-
-                        </textarea>
-
-                        <button id="target" class="post-replies-login-btn" href=${"/post"}>Post</button>
-                        </div>
-                                    `
+<script src="/post.js">
 
 
-                if (res == true) {
-
-
-                    $( "#amount-replies" ).after( commentDiv );
-
-                    $("#target").click(function () {
-
-                        let location = window.location.href;
-                        let postID = location.split("post/")[1];
-
-                        $.ajax({
-                            url: "/api/v1/comment/create",
-                            type: 'POST',
-                            contentType: "application/json",
-                            dataType: 'json',
-                            data: JSON.stringify(
-                                {
-                                    "postId":postID,
-                                    "description": $("#reply-content").val()
-                                }
-                            ),
-                            success: function (res) {
-                                console.log(res);
-
-                            }
-                        });
-
-
-                    });
-
-                } else {
-                    $( "#amount-replies" ).after( loginDiv );
-
-                }
-            }
-        });
-
-
-        let location = window.location.href;
-        let postID = location.split("post/")[1];
-
-        $.ajax({
-            url: "/api/v1/post/"+postID,
-            type: 'GET',
-            contentType: "application/json",
-            dataType: 'json',
-            success: function (res) {
-
-                console.log(res.data)
-                let comments = res.data.comments;
-
-                $('#amount-replies').text(comments.length + " Replies");
-
-                for (let i =0; i < comments.length; i++) {
-                    $("#replies").append(
-                        `<div class="post-replies-reply">
-                    <h3 style="color: #0b6e4f">${comments[i].user.firstName}</h3>
-
-                    <p>${comments[i].description}</p>
-
-                </div>
-
-                        `
-                    );
-                }
-
-            }
-        });
-
-
-
-    })
 
 </script>
 

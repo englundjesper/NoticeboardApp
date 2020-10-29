@@ -10,6 +10,36 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
+    <script>
+        $.ajax({
+            url: "/api/v1/auth/user",
+            type: 'GET',
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (res) {
+
+                if(res.data){
+                    $(".main-header").append(`
+<div class="nav-list-container">
+                    <p>${res.data.userName}</p>
+                    <a href="/addpost" class="add-post">Add Post</a></div>
+                    `)
+
+                } else{
+                    $(".main-header").append(`
+<div class="nav-list-container">
+                    <a style="background-color: #148cb8;" href="/login" class="add-post">Login</a>
+                    <a style="background-color: #148cb8;" href="/register" class="add-post">Register</a></div>
+                    `)
+
+
+                }
+
+
+            }
+        });
+    </script>
+
     <title>Title</title>
 </head>
 <body>
@@ -22,7 +52,7 @@
 
         </a>    </div>
 
-    <a href="/addpost" class="add-post">Add Post</a>
+
 
 </header>
 

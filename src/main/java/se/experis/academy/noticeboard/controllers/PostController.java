@@ -41,8 +41,13 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse> deletePost(HttpServletRequest request, @RequestBody PostWeb postWeb, @PathVariable Integer id) {
-        return postService.deletePost(request, postWeb, id);
+    public ResponseEntity<CommonResponse> deletePost(HttpServletRequest request, @PathVariable Integer id) {
+        return postService.deletePost(request, id);
 
+    }
+
+    @GetMapping("/{postId}/session")
+    public ResponseEntity<CommonResponse> getPostOwnerBySession(HttpServletRequest request, @PathVariable Integer postId) {
+        return postService.getUser(request, postId);
     }
 }
