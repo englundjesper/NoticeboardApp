@@ -3,6 +3,7 @@ package se.experis.academy.noticeboard.utils;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.session.data.redis.config.ConfigureRedisAction;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -11,6 +12,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Configuration
+@PropertySource("application.properties")
 public class RedisConfig {
 
     @Bean
