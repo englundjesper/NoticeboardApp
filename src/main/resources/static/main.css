@@ -88,6 +88,7 @@ a:hover, a:active{
     width: 950px;
     margin: 0 auto;
     margin-top: 20px;
+    padding: 20px;
 
 }
 
@@ -122,6 +123,16 @@ ul {
     display: flex;
     flex: 1;
 
+}
+
+.notice-item-content:nth-child(1) > p {
+   font-weight: bold;
+}
+
+.notice-item-content:nth-child(2) > p {
+    max-height: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .notice-item-content > * {

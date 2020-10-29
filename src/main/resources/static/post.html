@@ -23,6 +23,7 @@
                     $(".main-header").append(`
 <div class="nav-list-container">
                     <p>${res.data.userName}</p>
+                    <div style="background-color: green; cursor: pointer" id="logout" class="add-post">Logout</div>
                     <a href="/addpost" class="add-post">Add Post</a></div>
                     `)
 
@@ -36,7 +37,20 @@
 
                 }
 
+                $("#logout").click(function (){
+                    console.log("CLICKED...")
+                    $.ajax({
+                        url: "/api/v1/auth/logout",
+                        type: 'POST',
+                        contentType: "application/json",
+                        dataType: 'json',
+                        success : function (res){
 
+                            window.location.href = "/";
+
+                        },
+                    })
+                })
             }
         });
     </script>
@@ -79,9 +93,11 @@
 
 <script src="/post.js">
 
-
-
 </script>
+
+
+
+
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"

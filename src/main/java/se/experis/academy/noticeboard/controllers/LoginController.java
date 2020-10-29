@@ -13,6 +13,8 @@ import se.experis.academy.noticeboard.repositories.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -25,6 +27,7 @@ public class LoginController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
 
@@ -33,12 +36,28 @@ public class LoginController {
             User user = optionalUser.get();
 
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                System.out.println("Id Login " + request.getSession().getId());
                 request.getSession().setAttribute("userId", user.getId());
+
                 return new ResponseEntity<>(user, HttpStatus.OK);
             }
         }
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<CommonResponse> logout( HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        CommonResponse cm = new CommonResponse();
+
+        if(session!=null){
+
+
+            session.removeAttribute("userId");
+            cm.message = "Deleted user session";
+
+        }
+
+        return new ResponseEntity<>(cm,HttpStatus.OK);
     }
 
     @GetMapping("/user")
@@ -47,11 +66,20 @@ public class LoginController {
         HttpSession session = request.getSession(false);
 
         if (session != null) {
-            int loggedInUserId = (int) session.getAttribute("userId");
+           int  loggedInUserId = 0;
+            if(session.getAttribute("userId")!=null){
+                loggedInUserId = (int) session.getAttribute("userId");
+            }
             Optional<User> optionalUser = userRepository.findById(loggedInUserId);
             if (optionalUser.isPresent()) {
                 cm.data = optionalUser.get();
+                cm.message = "User logged in ";
+            } else {
+                cm.message = "User not logged in ";
+
             }
+        } else {
+            cm.message = "User not logged in";
         }
 
         return new ResponseEntity<>(cm, HttpStatus.OK);
@@ -61,7 +89,8 @@ public class LoginController {
     public Boolean getStatus(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
-        return session != null;
+
+        return session != null && session.getAttribute("userId")!=null;
     }
 
     @GetMapping("/userId")

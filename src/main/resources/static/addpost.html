@@ -22,6 +22,8 @@
                     $(".main-header").append(`
 <div class="nav-list-container">
                     <p>${res.data.userName}</p>
+                    <div style="background-color: green; cursor: pointer" id="logout" class="add-post">Logout</div>
+
                     <a href="/addpost" class="add-post">Add Post</a></div>
                     `)
 
@@ -34,7 +36,20 @@
 
 
                 }
+                $("#logout").click(function (){
+                    console.log("CLICKED...")
+                    $.ajax({
+                        url: "/api/v1/auth/logout",
+                        type: 'POST',
+                        contentType: "application/json",
+                        dataType: 'json',
+                        success : function (res){
 
+                            window.location.href = "/";
+
+                        },
+                    })
+                })
 
             }
         });
@@ -92,17 +107,35 @@
                     }
                 ),
                 success: function (res) {
-                    console.log(res);
+                    $(".main-container").prepend(`<div class="alert alert-success" role="alert">
+  Post was added!
+</div>`);
+                    removeAlert().then(()=>{
+                        window.location.href = "/post/" + res.data.id;
+                    })
 
                 }
             });
 
 
         });
+
+        function removeAlert() {
+            return new Promise(function (resolve) {
+
+                setTimeout(function () {
+                    $('.alert').remove();
+                    resolve();
+                }, 2000);
+
+            });
+
+        }
     })
 
 
 </script>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"

@@ -49,7 +49,15 @@ $(window).on('load', function () {
                             }
                         ),
                         success: function (res) {
-                            console.log(res);
+
+                            console.log(res)
+
+                            $("#replies").prepend(`<div class="alert alert-success" role="alert">
+  Reply was added!
+</div>`);
+                            removeAlert().then(() => {
+                                window.location.href = "/post/" + postID;
+                            })
 
                         }
                     });
@@ -104,15 +112,13 @@ $(window).on('load', function () {
                 type: 'GET',
                 contentType: "application/json",
                 dataType: 'json',
-                success : function (loggedInUserId){
+                success: function (loggedInUserId) {
 
-                   displayComments(comments,loggedInUserId);
+                    displayComments(comments, loggedInUserId);
 
                 }
 
             })
-
-
 
 
             checkIfUserIsLoggedIn();
@@ -121,12 +127,13 @@ $(window).on('load', function () {
         }
     });
 
-    function handleEditDescription(){
+    function handleEditDescription() {
 
-        $(".save-comment").click(function(){
+        $(".save-comment").click(function () {
             // Holds the product ID of the clicked element
             let commentId = $(this).prev().attr("data-comment-id");
 
+            let parentDiv = $(this).parent();
 
             $.ajax({
                 url: "/api/v1/comment/" + commentId,
@@ -134,22 +141,27 @@ $(window).on('load', function () {
                 contentType: "application/json",
                 dataType: 'json',
                 data: JSON.stringify(
-                    {"postId": postID,
-                        "description": $(this).prev().text()}
+                    {
+                        "postId": postID,
+                        "description": $(this).prev().text()
+                    }
                 ),
                 success: function (res) {
-                    console.log(res)
+                    $(parentDiv).prepend(`<div class="alert alert-success" role="alert">
+  Reply was updated!
+</div>`);
+
                 }
             });
 
         });
     }
 
-    function displayComments(comments,loggedInUserId){
+    function displayComments(comments, loggedInUserId) {
 
         for (let i = 0; i < comments.length; i++) {
             let commentDescription = "";
-            if(loggedInUserId && comments[i].user.id == loggedInUserId){
+            if (loggedInUserId && comments[i].user.id == loggedInUserId) {
                 commentDescription = `
 <div class="comment-edit-container">
 <p class="comment-edit"
@@ -161,9 +173,9 @@ $(window).on('load', function () {
                 commentDescription = `<p >${comments[i].description}</p>`;
             }
 
-            $("#replies").append(
+            $(".post-replies-list").append(
                 `<div class="post-replies-reply">
-                    <h3 style="color: #0b6e4f">${comments[i].user.firstName}</h3>
+                    <h3 style="color: #0b6e4f">${comments[i].user.userName}</h3>
 
                     ${commentDescription}
 
@@ -175,7 +187,6 @@ $(window).on('load', function () {
         handleEditDescription();
 
     }
-
 
 
     function checkIfUserIsLoggedIn() {
@@ -216,10 +227,9 @@ $(window).on('load', function () {
                 $(".main-container").prepend(`<div class="alert alert-success" role="alert">
   Post was deleted!
 </div>`);
-                removeAlert().then(()=>{
+                removeAlert().then(() => {
                     window.location.href = "/";
                 })
-
 
 
             },
@@ -258,7 +268,6 @@ $(window).on('load', function () {
 
 
     }
-
 
 
     function removeAlert() {

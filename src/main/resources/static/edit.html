@@ -18,14 +18,15 @@
             dataType: 'json',
             success: function (res) {
 
-                if(res.data){
+                if (res.data) {
                     $(".main-header").append(`
 <div class="nav-list-container">
                     <p>${res.data.userName}</p>
+                    <div style="background-color: green; cursor: pointer" id="logout" class="add-post">Logout</div>
                     <a href="/addpost" class="add-post">Add Post</a></div>
                     `)
 
-                } else{
+                } else {
                     $(".main-header").append(`
 <div class="nav-list-container">
                     <a style="background-color: #148cb8;" href="/login" class="add-post">Login</a>
@@ -34,7 +35,20 @@
 
 
                 }
+                $("#logout").click(function (){
+                    console.log("CLICKED...")
+                    $.ajax({
+                        url: "/api/v1/auth/logout",
+                        type: 'POST',
+                        contentType: "application/json",
+                        dataType: 'json',
+                        success : function (res){
 
+                            window.location.href = "/";
+
+                        },
+                    })
+                })
 
             }
         });
@@ -55,7 +69,6 @@
 
 </header>
 
-<h1>EDDDITT PAGE</h1>
 <div class="main-container">
     <div style="margin: 0 auto; max-width: 600px" class="post-container">
         <div class="add-post-content">
@@ -69,7 +82,7 @@
                 </textarea>
         </div>
 
-        <button id="target" class="add-post login-btn">Save Edit</button>
+        <button style="margin-top: 10px" id="target" class="add-post login-btn">Save Edit</button>
 
     </div>
 </div>
@@ -161,6 +174,8 @@
 
 </script>
 
+
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
