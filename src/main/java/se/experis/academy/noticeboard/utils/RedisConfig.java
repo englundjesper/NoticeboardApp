@@ -16,7 +16,7 @@ import java.net.URISyntaxException;
 @PropertySource("application.properties")
 public class RedisConfig {
 
-    @Value("${redis.host}")
+    @Value("${spring.redis.host}")
     private String redisHost;
     @Bean
     public JedisPool getJedisPool() {
