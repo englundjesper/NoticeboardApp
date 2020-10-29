@@ -30,7 +30,7 @@ public class RedisConfig {
                     redisPort,
                     Protocol.DEFAULT_TIMEOUT,
 //                    redisURI.getUserInfo().split(":",2)[1]);
-                    redisHostName,redisPort);
+                    "14079");
         } catch (URISyntaxException e) {
             throw new RuntimeException();
         }
