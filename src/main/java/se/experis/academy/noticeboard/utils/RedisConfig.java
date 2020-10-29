@@ -33,7 +33,7 @@ public class RedisConfig {
         return pool;
     }
     @Bean
-    public RedisConnectionFactory jedisConnectionFactory(){
+    public JedisConnectionFactory jedisConnectionFactory(){
         JedisPoolConfig poolConfig = new JedisPoolConfig();
 
         poolConfig.setMaxTotal(10);
