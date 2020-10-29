@@ -35,7 +35,7 @@ public class RedisConfig {
         return pool;
     }
     @Bean
-    public JedisConnectionFactory jedisConnectionFactory(){
+    public RedisConnectionFactory jedisConnectionFactory(){
         JedisPoolConfig poolConfig = new JedisPoolConfig();
         var uri = RedisURI.create(System.getenv("REDIS_URL"));
         var config = new RedisStandaloneConfiguration(uri.getHost(),uri.getPort());
