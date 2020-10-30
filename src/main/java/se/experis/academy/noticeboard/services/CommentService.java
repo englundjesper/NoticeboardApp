@@ -73,10 +73,6 @@ public class CommentService {
         HttpStatus resp;
         HttpSession session = request.getSession(false);
 
-        System.out.println(id);
-        System.out.println(commentWeb.getPostId());
-        System.out.println(commentWeb.getDescription());
-
         if (session != null) {
             int loggedInUserId = (int) session.getAttribute("userId");
             Optional<User> optionalUser = userRepository.findById(loggedInUserId);

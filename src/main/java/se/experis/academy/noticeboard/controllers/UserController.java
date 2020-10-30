@@ -30,7 +30,6 @@ public class UserController {
         CommonResponse cr = new CommonResponse();
         HttpStatus resp;
         Optional<User> optionalUser = repository.findByUserName(user.getUserName());
-
         if (!optionalUser.isPresent()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user = repository.save(user);

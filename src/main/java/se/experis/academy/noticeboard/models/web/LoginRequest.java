@@ -1,9 +1,7 @@
 package se.experis.academy.noticeboard.models.web;
 
 public class LoginRequest {
-
-    private String userName;
-    private String password;
+    private String userName,password;
 
     public LoginRequest() {
     }
@@ -11,15 +9,13 @@ public class LoginRequest {
     public String getUserName() {
         return userName;
     }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public String getPassword() {
         return password;
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
     public void setPassword(String password) {
         this.password = password;
     }

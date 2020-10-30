@@ -40,7 +40,6 @@ public class PostService {
             Optional<User> optionalUser = userRepository.findById(loggedInUserId);
 
             if (optionalUser.isPresent()) {
-                System.out.println("Id create " + loggedInUserId);
                 post.setTitle(postWeb.getTitle());
                 post.setDescription(postWeb.getDescription());
                 post.setUser(optionalUser.get());
@@ -64,7 +63,6 @@ public class PostService {
         Command cmd = new Command(request);
         CommonResponse cr = new CommonResponse();
         HttpStatus resp;
-
         Optional<Post> optionalPost = postRepository.findById(id);
         if (optionalPost.isPresent()) {
             Post post = optionalPost.get();

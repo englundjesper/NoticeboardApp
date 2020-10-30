@@ -1,7 +1,6 @@
 package se.experis.academy.noticeboard.utils;
 
 import org.springframework.http.HttpStatus;
-
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;

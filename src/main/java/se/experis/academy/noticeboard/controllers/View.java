@@ -43,12 +43,9 @@ public class View {
         return "/edit.html";
     }
 
-    // not working...
     @RequestMapping(value = "post/{id}", method = RequestMethod.GET)
     public String singlePost(@PathVariable Integer id) {
         System.out.println("here");
         return "/post.html";
     }
-
-
 }

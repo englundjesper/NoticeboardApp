@@ -7,20 +7,16 @@ public class CommentWeb {
     public CommentWeb() {
     }
 
-
     public Integer getPostId() {
         return postId;
     }
-
     public String getDescription() {
         return description;
     }
 
-
     public void setPostId(Integer postId) {
         this.postId = postId;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }

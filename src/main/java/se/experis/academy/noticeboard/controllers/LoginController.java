@@ -51,10 +51,10 @@ public class LoginController {
 
     @PostMapping("/logout")
     public ResponseEntity<CommonResponse> logout( HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
         Command cmd = new Command(request);
         CommonResponse cr = new CommonResponse();
-        HttpStatus resp = HttpStatus.NO_CONTENT;
+        HttpStatus resp = HttpStatus.OK;
+        HttpSession session = request.getSession(false);
         if(session!=null){
             session.removeAttribute("userId");
             cr.message = "Deleted user session";
@@ -65,10 +65,10 @@ public class LoginController {
 
     @GetMapping("/user")
     public ResponseEntity<?> getUser(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
         Command cmd = new Command(request);
         CommonResponse cr = new CommonResponse();
         HttpStatus resp;
+        HttpSession session = request.getSession(false);
         if (session != null) {
            int  loggedInUserId = 0;
             if(session.getAttribute("userId")!=null){
