@@ -10,49 +10,9 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
-    <script>
-        $.ajax({
-            url: "/api/v1/auth/user",
-            type: 'GET',
-            contentType: "application/json",
-            dataType: 'json',
-            success: function (res) {
+    <script type="module" src="/js/header-manipulation.js"></script>
+    <script type="module" src="/js/edit-post.js"></script>
 
-                if (res.data) {
-                    $(".main-header").append(`
-<div class="nav-list-container">
-                    <p>${res.data.userName}</p>
-                    <div style="background-color: green; cursor: pointer" id="logout" class="add-post">Logout</div>
-                    <a href="/addpost" class="add-post">Add Post</a></div>
-                    `)
-
-                } else {
-                    $(".main-header").append(`
-<div class="nav-list-container">
-                    <a style="background-color: #148cb8;" href="/login" class="add-post">Login</a>
-                    <a style="background-color: #148cb8;" href="/register" class="add-post">Register</a></div>
-                    `)
-
-
-                }
-                $("#logout").click(function (){
-                    console.log("CLICKED...")
-                    $.ajax({
-                        url: "/api/v1/auth/logout",
-                        type: 'POST',
-                        contentType: "application/json",
-                        dataType: 'json',
-                        success : function (res){
-
-                            window.location.href = "/";
-
-                        },
-                    })
-                })
-
-            }
-        });
-    </script>
     <title>Title</title>
 </head>
 <body>
@@ -78,8 +38,8 @@
 
         <div class="add-post-content">
             <label>Post</label>
-            <textarea id="post-content" rows="3" placeholder="Edit a post...">
-                </textarea>
+            <textarea id="post-content" rows="3" placeholder="Edit a post..."></textarea>
+
         </div>
 
         <button style="margin-top: 10px" id="target" class="add-post login-btn">Save Edit</button>
@@ -87,95 +47,7 @@
     </div>
 </div>
 
-<script>
 
-    $(window).on('load', function () {
-
-
-        let location = window.location.href;
-        let postID = location.split("post/")[1].split("/")[0];
-
-        console.log(postID)
-
-        $.ajax({
-            url: "/api/v1/post/" + postID + "/session",
-            type: 'GET',
-            contentType: "application/json",
-            dataType: 'json',
-            success: function (res) {
-
-                $.ajax({
-                    url: "/api/v1/post/" + postID,
-                    type: 'GET',
-                    contentType: "application/json",
-                    dataType: 'json',
-                    success: function (res) {
-
-                        let post = res.data;
-
-                        $('#title').val(post.title);
-
-                        $('#post-content').val(post.description);
-
-                        $("#target").click(handleEdit);
-                    }
-                });
-
-
-            },
-            error: function (err) {
-
-                //visa error meddelande, typ "not your
-                //window.location.href = '/';
-
-            }
-        });
-
-        function handleEdit() {
-            $.ajax({
-                url: "/api/v1/post/update/" + postID,
-                type: 'PATCH',
-                contentType: "application/json",
-                dataType: 'json',
-                data: JSON.stringify(
-                    {
-                        "title": $("#title").val(),
-                        "description": $("#post-content").val()
-                    }
-                ),
-                success: function (res) {
-                    $(".main-container").prepend(`<div class="alert alert-success" role="alert">
-  Post updated!
-</div>`)
-                    removeAlert().then(() => {
-                        window.location.href = "/post/" + postID;
-
-                    })
-
-                }
-            });
-        }
-
-        function removeAlert() {
-
-            return new Promise(function (resolve) {
-
-                setTimeout(function () {
-                    $('.alert').remove();
-                    resolve();
-                }, 2000);
-
-            });
-
-        }
-
-    })
-
-
-</script>
-
-
-</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>

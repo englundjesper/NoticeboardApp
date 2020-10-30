@@ -125,6 +125,21 @@ ul {
 
 }
 
+<<<<<<< HEAD
+.comment-edit-container > div{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.remove-comment{
+    margin-left: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+=======
+>>>>>>> 23ee297e1ccc120b7d72e6cb5c1c7b92e11bd24e
 .notice-item-content:nth-child(1) > p {
    font-weight: bold;
 }

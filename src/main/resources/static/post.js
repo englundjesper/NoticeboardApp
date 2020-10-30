@@ -246,7 +246,6 @@ $(window).on('load', function () {
 
     function editPostListener() {
 
-        console.log("HÄÄÄr")
 
         $.ajax({
             url: "/api/v1/post/" + postID + "/session",

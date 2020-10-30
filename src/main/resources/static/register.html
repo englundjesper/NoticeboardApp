@@ -10,23 +10,9 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
-    <script>
-        $.ajax({
-            url: "/api/v1/auth/status",
-            type: 'GET',
-            contentType: "application/json",
-            dataType: 'json',
-            success: function (res) {
-
-                if (res == true) {
-                    $(location).attr('href', '/')
-                }
-            },
-            error: {}
-        });
+    <script type="module" src="/js/login-register-redirect.js"></script>
 
 
-    </script>
     <title>Title</title>
 </head>
 <body style="background: #f1f5f8;">
@@ -54,7 +40,8 @@
                     <h2>Register</h2>
                 </div>
 
-                <form id="target">
+                <form id="targetRegister">
+
 
                     <div class="form-group">
                         <input type="text" name="name" id="firstname" class="input-field" placeholder="firstname">
@@ -83,66 +70,8 @@
     </div>
 </div>
 
-<script>
 
-    $(window).on('load', function () {
-
-        $("#target").submit(function (e) {
-
-            //prevent Default functionality
-            e.preventDefault();
-
-            //get the action-url of the form
-
-
-            //do your own request an handle the results
-            $.ajax({
-                url: "/api/v1/user/create",
-                type: 'POST',
-                contentType: "application/json",
-                dataType: 'json',
-                data: JSON.stringify(
-                    {
-                        "firstName": $("#firstname").val(),
-                        "lastName": $("#lastname").val(),
-                        "userName": $("#username").val(),
-                        "password": $("#password").val()
-                    }
-                ),
-                success: function (res) {
-
-                    $(".main-container").prepend(`<div class="alert alert-success" role="alert">
-  Registered!
-</div>`);
-                    removeAlert().then(() => {
-                        window.location.href = "/";
-                    })
-
-                },
-                error: function (){
-                    $(".main-container").prepend(`<div class="alert alert-danger" role="alert">
-  Registration failed!
-</div>`);
-                }
-            });
-
-        });
-
-        function removeAlert() {
-            return new Promise(function (resolve) {
-
-                setTimeout(function () {
-                    $('.alert').remove();
-                    resolve();
-                }, 2000);
-
-            });
-
-        }
-    });
-
-</script>
-
+<script type="module" src="/js/login-register.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
