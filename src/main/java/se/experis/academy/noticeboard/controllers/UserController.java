@@ -31,7 +31,7 @@ public class UserController {
         HttpStatus resp;
         Optional<User> optionalUser = repository.findByUserName(user.getUserName());
         if (!optionalUser.isPresent()) {
-            System.out.println("HEREEE");
+
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user = repository.save(user);
             resp = HttpStatus.CREATED;

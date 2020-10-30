@@ -31,7 +31,7 @@ public class LoginService {
         Optional<User> optionalUser = userRepository.findByUserName(loginRequest.getUserName());
 
         if (optionalUser.isPresent()) {
-            System.out.println("HÄÄÄÄR");
+
             resp = HttpStatus.CREATED;
             cr.data = optionalUser.get();
             cr.message = "Login by user: " + optionalUser.get().getUserName();

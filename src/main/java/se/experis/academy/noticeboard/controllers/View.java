@@ -45,7 +45,6 @@ public class View {
 
     @RequestMapping(value = "post/{id}", method = RequestMethod.GET)
     public String singlePost(@PathVariable Integer id) {
-        System.out.println("here");
         return "/post.html";
     }
 }

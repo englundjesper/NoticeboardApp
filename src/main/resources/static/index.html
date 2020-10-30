@@ -13,10 +13,6 @@
     <script type="module" src="/js/header-manipulation.js"></script>
 
 
-    <script>
-
-    </script>
-
     <title>Title</title>
 </head>
 <body>
@@ -27,8 +23,7 @@
         <a href="/">
             <h1>Notices</h1>
 
-        </a>    </div>
-
+        </a></div>
 
 
 </header>
@@ -53,7 +48,7 @@
                 let posts = res.data;
                 console.log(posts)
 
-                for (let i =0; i < posts.length; i++) {
+                for (let i = 0; i < posts.length; i++) {
                     console.log(posts[i]);
                     $("#list").append(
                         `
@@ -80,7 +75,6 @@
 
     })
 </script>
-
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
